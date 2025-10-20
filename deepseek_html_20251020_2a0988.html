@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CoupleConnect - Stay Close When You're Far</title>
+    <style>
+        :root {
+            --primary: #ff6b8b;
+            --secondary: #6a5af9;
+            --accent: #4ecdc4;
+            --light: #f8f9fa;
+            --dark: #343a40;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            color: var(--dark);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .logo h1 {
+            color: var(--primary);
+            font-size: 1.8rem;
+        }
+        
+        .logo-icon {
+            font-size: 2rem;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 20px;
+        }
+        
+        nav a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+            padding: 8px 15px;
+            border-radius: 20px;
+            transition: all 0.3s;
+        }
+        
+        nav a.active, nav a:hover {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr;
+            gap: 20px;
+        }
+        
+        .panel {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+        }
+        
+        .left-panel, .right-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .mood-section, .memories-section, .games-section {
+            margin-bottom: 20px;
+        }
+        
+        h2 {
+            color: var(--secondary);
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+        }
+        
+        .mood-container {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        
+        .mood-item {
+            text-align: center;
+        }
+        
+        .mood-emoji {
+            font-size: 2.5rem;
+            margin-bottom: 5px;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        
+        .mood-emoji:hover {
+            transform: scale(1.2);
+        }
+        
+        .mood-emoji.selected {
+            transform: scale(1.3);
+            filter: drop-shadow(0 0 5px rgba(255, 107, 139, 0.5));
+        }
+        
+        .mood-name {
+            font-size: 0.9rem;
+            color: var(--dark);
+        }
+        
+        .current-moods {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+        
+        .partner-mood {
+            text-align: center;
+        }
+        
+        .partner-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .timeline {
+            margin-top: 20px;
+        }
+        
+        .memory {
+            padding: 15px;
+            border-left: 3px solid var(--accent);
+            margin-bottom: 15px;
+            background: #f8f9fa;
+            border-radius: 0 10px 10px 0;
+        }
+        
+        .memory-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+        
+        .memory-content {
+            margin-bottom: 10px;
+        }
+        
+        .memory-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .btn-secondary {
+            background: var(--secondary);
+            color: white;
+        }
+        
+        .btn-accent {
+            background: var(--accent);
+            color: white;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+        
+        .game-card {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .game-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow);
+        }
+        
+        .game-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--secondary);
+        }
+        
+        .game-desc {
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+        
+        .game-screen {
+            display: none;
+            margin-top: 20px;
+        }
+        
+        .active-game {
+            display: block;
+        }
+        
+        .question {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .answer-input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+            margin-bottom: 15px;
+            resize: vertical;
+            min-height: 100px;
+        }
+        
+        .answers-container {
+            margin-top: 20px;
+        }
+        
+        .answer {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .answer-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+        
+        .partner-status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 15px;
+            border-radius: 10px;
+            background: #f8f9fa;
+            margin-bottom: 15px;
+        }
+        
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #4caf50;
+        }
+        
+        .status-dot.offline {
+            background: #f44336;
+        }
+        
+        .add-memory-form {
+            margin-top: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .countdown {
+            font-size: 1.5rem;
+            text-align: center;
+            margin: 20px 0;
+            color: var(--primary);
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <div class="logo-icon">💑</div>
+                <h1>CoupleConnect</h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#" class="active" data-tab="home">Home</a></li>
+                    <li><a href="#" data-tab="moods">Moods</a></li>
+                    <li><a href="#" data-tab="memories">Memories</a></li>
+                    <li><a href="#" data-tab="games">Games</a></li>
+                </ul>
+            </nav>
+        </header>
+        
+        <div class="main-content">
+            <div class="left-panel">
+                <div class="panel partner-status">
+                    <div class="status-dot"></div>
+                    <div>
+                        <div class="partner-name">Alex</div>
+                        <div class="status-text">Online - Feeling happy</div>
+                    </div>
+                </div>
+                
+                <div class="panel">
+                    <h2>Upcoming Events</h2>
+                    <div class="event">
+                        <div class="event-title">Video Call Date</div>
+                        <div class="event-time">Tomorrow, 7:00 PM</div>
+                    </div>
+                    <div class="event">
+                        <div class="event-title">Anniversary</div>
+                        <div class="event-time">45 days to go</div>
+                    </div>
+                </div>
+                
+                <div class="panel">
+                    <h2>Shared Goals</h2>
+                    <div class="goal">
+                        <div class="goal-title">Watch "Our Show" together</div>
+                        <div class="goal-progress">Episode 5/10</div>
+                    </div>
+                    <div class="goal">
+                        <div class="goal-title">Save for next visit</div>
+                        <div class="goal-progress">$350/$800</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="center-panel panel">
+                <div id="home-tab" class="tab-content active">
+                    <h2>Welcome Back!</h2>
+                    <p>It's been 3 days since you last shared a memory. How about adding one now?</p>
+                    
+                    <div class="current-moods">
+                        <div class="partner-mood">
+                            <div class="partner-name">You</div>
+                            <div class="mood-emoji" id="your-current-mood">😊</div>
+                        </div>
+                        <div class="partner-mood">
+                            <div class="partner-name">Alex</div>
+                            <div class="mood-emoji" id="partner-current-mood">😍</div>
+                        </div>
+                    </div>
+                    
+                    <div class="recent-memories">
+                        <h2>Recent Memories</h2>
+                        <div class="memory">
+                            <div class="memory-header">
+                                <span class="memory-author">Alex</span>
+                                <span class="memory-date">2 days ago</span>
+                            </div>
+                            <div class="memory-content">
+                                Remember our last video call when we tried to cook the same recipe? My kitchen was a mess but it was so fun doing it "together"!
+                            </div>
+                            <div class="memory-actions">
+                                <button class="btn btn-primary">❤️ 3</button>
+                                <button class="btn btn-accent">Comment</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="moods-tab" class="tab-content hidden">
+                    <h2>Share Your Mood</h2>
+                    <p>Let your partner know how you're feeling today.</p>
+                    
+                    <div class="mood-container">
+                        <div class="mood-item">
+                            <div class="mood-emoji" data-mood="happy">😊</div>
+                            <div class="mood-name">Happy</div>
+                        </div>
+                        <div class="mood-item">
+                            <div class="mood-emoji" data-mood="excited">😍</div>
+                            <div class="mood-name">Excited</div>
+                        </div>
+                        <div class="mood-item">
+                            <div class="mood-emoji" data-mood="calm">😌</div>
+                            <div class="mood-name">Calm</div>
+                        </div>
+                        <div class="mood-item">
+                            <div class="mood-emoji" data-mood="sad">😔</div>
+                            <div class="mood-name">Sad</div>
+                        </div>
+                        <div class="mood-item">
+                            <div class="mood-emoji" data-mood="stressed">😥</div>
+                            <div class="mood-name">Stressed</div>
+                        </div>
+                    </div>
+                    
+                    <button class="btn btn-primary" id="share-mood-btn">Share Mood</button>
+                    
+                    <div class="current-moods">
+                        <div class="partner-mood">
+                            <div class="partner-name">You</div>
+                            <div class="mood-emoji" id="your-mood-display">😊</div>
+                        </div>
+                        <div class="partner-mood">
+                            <div class="partner-name">Alex</div>
+                            <div class="mood-emoji" id="partner-mood-display">😍</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="memories-tab" class="tab-content hidden">
+                    <h2>Shared Memories</h2>
+                    <p>Add and revisit your special moments together.</p>
+                    
+                    <button class="btn btn-primary" id="add-memory-btn">Add New Memory</button>
+                    
+                    <div class="add-memory-form hidden" id="memory-form">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="memory-title" placeholder="Memory Title">
+                        </div>
+                        <div class="form-group">
+                            <textarea class="form-control answer-input" id="memory-content" placeholder="Share your memory..."></textarea>
+                        </div>
+                        <div class="form-group">
+                            <input type="file" id="memory-photo" accept="image/*">
+                        </div>
+                        <button class="btn btn-secondary" id="save-memory-btn">Save Memory</button>
+                    </div>
+                    
+                    <div class="timeline">
+                        <div class="memory">
+                            <div class="memory-header">
+                                <span class="memory-author">You</span>
+                                <span class="memory-date">5 days ago</span>
+                            </div>
+                            <div class="memory-content">
+                                I was listening to our playlist today and it reminded me of that road trip we took last summer. Can't wait to make more memories like that!
+                            </div>
+                            <div class="memory-actions">
+                                <button class="btn btn-primary">❤️ 2</button>
+                                <button class="btn btn-accent">Comment</button>
+                            </div>
+                        </div>
+                        
+                        <div class="memory">
+                            <div class="memory-header">
+                                <span class="memory-author">Alex</span>
+                                <span class="memory-date">1 week ago</span>
+                            </div>
+                            <div class="memory-content">
+                                Just received the care package you sent! The handwritten notes with each item made my entire week. I'm so lucky to have you.
+                            </div>
+                            <div class="memory-actions">
+                                <button class="btn btn-primary">❤️ 5</button>
+                                <button class="btn btn-accent">Comment</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="games-tab" class="tab-content hidden">
+                    <h2>Connection Games</h2>
+                    <p>Play these games to deepen your connection and learn more about each other.</p>
+                    
+                    <div class="game-card" data-game="question-game">
+                        <div class="game-title">Daily Question</div>
+                        <div class="game-desc">Answer a new question every day and see each other's responses.</div>
+                    </div>
+                    
+                    <div class="game-card" data-game="would-you-rather">
+                        <div class="game-title">Would You Rather</div>
+                        <div class="game-desc">Fun scenarios to learn about each other's preferences.</div>
+                    </div>
+                    
+                    <div class="game-card" data-game="memory-match">
+                        <div class="game-title">Memory Match</div>
+                        <div class="game-desc">Test how well you remember details about each other.</div>
+                    </div>
+                    
+                    <div class="game-screen" id="question-game">
+                        <div class="question">
+                            If you could have any superpower, what would it be and why?
+                        </div>
+                        <textarea class="answer-input" placeholder="Type your answer here..."></textarea>
+                        <button class="btn btn-primary" id="submit-answer-btn">Submit Answer</button>
+                        
+                        <div class="countdown hidden" id="countdown">
+                            Waiting for partner... 3
+                        </div>
+                        
+                        <div class="answers-container hidden" id="answers-container">
+                            <div class="answer">
+                                <div class="answer-header">
+                                    <span class="answer-author">You</span>
+                                </div>
+                                <div class="answer-content" id="your-answer">
+                                    <!-- Your answer will appear here -->
+                                </div>
+                            </div>
+                            <div class="answer">
+                                <div class="answer-header">
+                                    <span class="answer-author">Alex</span>
+                                </div>
+                                <div class="answer-content" id="partner-answer">
+                                    <!-- Partner's answer will appear here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="game-screen" id="would-you-rather">
+                        <div class="question">
+                            Would you rather be able to teleport anywhere or read minds?
+                        </div>
+                        <div class="options">
+                            <button class="btn btn-primary option-btn">Teleport</button>
+                            <button class="btn btn-secondary option-btn">Read Minds</button>
+                        </div>
+                        
+                        <div class="answers-container hidden" id="wyr-answers">
+                            <div class="answer">
+                                <div class="answer-header">
+                                    <span class="answer-author">You</span>
+                                </div>
+                                <div class="answer-content" id="your-wyr-answer">
+                                    <!-- Your choice will appear here -->
+                                </div>
+                            </div>
+                            <div class="answer">
+                                <div class="answer-header">
+                                    <span class="answer-author">Alex</span>
+                                </div>
+                                <div class="answer-content" id="partner-wyr-answer">
+                                    <!-- Partner's choice will appear here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="right-panel">
+                <div class="panel">
+                    <h2>Time Together</h2>
+                    <div class="countdown-timer">
+                        <div class="timer-title">Next Visit</div>
+                        <div class="timer">67 days, 14 hours</div>
+                    </div>
+                    <div class="milestone">
+                        <div class="milestone-title">Days Since First Meeting</div>
+                        <div class="milestone-count">428 days</div>
+                    </div>
+                </div>
+                
+                <div class="panel">
+                    <h2>Quick Connect</h2>
+                    <button class="btn btn-primary" style="width: 100%; margin-bottom: 10px;">Send a Love Note</button>
+                    <button class="btn btn-secondary" style="width: 100%; margin-bottom: 10px;">Schedule Video Call</button>
+                    <button class="btn btn-accent" style="width: 100%;">Send a Surprise</button>
+                </div>
+                
+                <div class="panel">
+                    <h2>Relationship Stats</h2>
+                    <div class="stat">
+                        <div class="stat-title">Memories Shared</div>
+                        <div class="stat-value">47</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-title">Questions Answered</div>
+                        <div class="stat-value">128</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-title">Miles Between</div>
+                        <div class="stat-value">1,247</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab Navigation
+        document.querySelectorAll('nav a').forEach(tab => {
+            tab.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Remove active class from all tabs and tab contents
+                document.querySelectorAll('nav a').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
+                
+                // Add active class to clicked tab
+                this.classList.add('active');
+                
+                // Show corresponding tab content
+                const tabId = this.getAttribute('data-tab') + '-tab';
+                document.getElementById(tabId).classList.remove('hidden');
+            });
+        });
+        
+        // Mood Selection
+        let selectedMood = 'happy';
+        document.querySelectorAll('.mood-emoji').forEach(emoji => {
+            emoji.addEventListener('click', function() {
+                if (this.parentElement.classList.contains('mood-item')) {
+                    // Remove selected class from all mood emojis
+                    document.querySelectorAll('.mood-emoji').forEach(e => e.classList.remove('selected'));
+                    
+                    // Add selected class to clicked emoji
+                    this.classList.add('selected');
+                    
+                    // Update selected mood
+                    selectedMood = this.getAttribute('data-mood');
+                }
+            });
+        });
+        
+        // Share Mood
+        document.getElementById('share-mood-btn').addEventListener('click', function() {
+            const moodEmoji = document.querySelector(`.mood-emoji[data-mood="${selectedMood}"]`).textContent;
+            document.getElementById('your-mood-display').textContent = moodEmoji;
+            document.getElementById('your-current-mood').textContent = moodEmoji;
+            
+            // In a real app, this would send to the server
+            alert('Your mood has been shared with your partner!');
+        });
+        
+        // Add Memory
+        document.getElementById('add-memory-btn').addEventListener('click', function() {
+            document.getElementById('memory-form').classList.toggle('hidden');
+        });
+        
+        document.getElementById('save-memory-btn').addEventListener('click', function() {
+            const title = document.getElementById('memory-title').value;
+            const content = document.getElementById('memory-content').value;
+            
+            if (content) {
+                // In a real app, this would send to the server
+                alert('Memory saved and shared with your partner!');
+                document.getElementById('memory-title').value = '';
+                document.getElementById('memory-content').value = '';
+                document.getElementById('memory-form').classList.add('hidden');
+            } else {
+                alert('Please add some content to your memory');
+            }
+        });
+        
+        // Game Selection
+        document.querySelectorAll('.game-card').forEach(card => {
+            card.addEventListener('click', function() {
+                const game = this.getAttribute('data-game');
+                
+                // Hide all game screens
+                document.querySelectorAll('.game-screen').forEach(screen => {
+                    screen.classList.remove('active-game');
+                });
+                
+                // Show selected game
+                document.getElementById(game).classList.add('active-game');
+            });
+        });
+        
+        // Question Game
+        document.getElementById('submit-answer-btn').addEventListener('click', function() {
+            const answer = document.querySelector('#question-game .answer-input').value;
+            
+            if (answer) {
+                document.getElementById('your-answer').textContent = answer;
+                document.querySelector('#question-game .answer-input').value = '';
+                
+                // Show countdown
+                document.getElementById('countdown').classList.remove('hidden');
+                document.getElementById('submit-answer-btn').disabled = true;
+                
+                // Simulate waiting for partner
+                let count = 3;
+                const countdownInterval = setInterval(() => {
+                    document.getElementById('countdown').textContent = `Waiting for partner... ${count}`;
+                    count--;
+                    
+                    if (count < 0) {
+                        clearInterval(countdownInterval);
+                        document.getElementById('countdown').classList.add('hidden');
+                        document.getElementById('answers-container').classList.remove('hidden');
+                        
+                        // Simulate partner's answer
+                        document.getElementById('partner-answer').textContent = "I'd choose the power to heal any illness. That way I could make sure you're always healthy and we have more time together!";
+                    }
+                }, 1000);
+            } else {
+                alert('Please write an answer first');
+            }
+        });
+        
+        // Would You Rather Game
+        document.querySelectorAll('#would-you-rather .option-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const choice = this.textContent;
+                document.getElementById('your-wyr-answer').textContent = `You would rather: ${choice}`;
+                
+                // Simulate partner's choice after a delay
+                setTimeout(() => {
+                    document.getElementById('partner-wyr-answer').textContent = "Alex would rather: Read Minds";
+                    document.getElementById('wyr-answers').classList.remove('hidden');
+                }, 1500);
+            });
+        });
+        
+        // Initialize with some data
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set initial moods
+            document.querySelector('.mood-emoji[data-mood="happy"]').classList.add('selected');
+        });
+    </script>
+</body>
+</html>
